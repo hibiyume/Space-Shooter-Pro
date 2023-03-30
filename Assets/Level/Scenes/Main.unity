@@ -241,7 +241,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 145e5b129b2cfa149a5de7a0fe27c8f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 15
+  movementSpeed: 8
+  fireRate: 0.1
+  projectilePrefab: {fileID: 6765962585700456340, guid: e1cb013220ca00c4cbd2c9a5ecea904a, type: 3}
   playerMovement:
     m_Name: Player Movement
     m_Type: 0
@@ -308,7 +310,6 @@ MonoBehaviour:
       m_Action: Player Attack
       m_Flags: 0
     m_Flags: 0
-  laserPrefab: {fileID: 6765962585700456340, guid: e1cb013220ca00c4cbd2c9a5ecea904a, type: 3}
 --- !u!1 &315742188
 GameObject:
   m_ObjectHideFlags: 0
