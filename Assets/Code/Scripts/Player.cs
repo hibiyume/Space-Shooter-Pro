@@ -8,12 +8,14 @@ using UnityEngine.Serialization;
 public class Player : MonoBehaviour
 {
     [Header("Player Parameters")]
+    [SerializeField] private float hitPoints;
     [SerializeField] private float movementSpeed;
     [SerializeField] private float fireRate;
     private float _nextFire = 0f;
     
     [Header("Other")]
     [SerializeField] private GameObject projectilePrefab;
+    private SpawnManager spawnManager;
     
     [Header("Input Controls")]
     [SerializeField] private InputAction playerMovement;
@@ -30,7 +32,12 @@ public class Player : MonoBehaviour
         playerMovement.Disable();
         playerAttack.Disable();
     }
-    
+
+    private void Awake()
+    {
+        spawnManager = FindObjectOfType<SpawnManager>();
+    }
+
     void Start()
     {
         transform.position = Vector3.zero;
@@ -63,7 +70,20 @@ public class Player : MonoBehaviour
 
     private void Fire()
     {
-        Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y + 0.75f, transform.position.z),
+        Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z),
             Quaternion.identity);
+    }
+
+    public void DamagePlayer(float damage)
+    {
+        hitPoints -= damage;
+
+        if (hitPoints <= 0)
+        {
+            spawnManager.OnPlayerDeath();
+            Debug.LogWarning("Game Over");
+            
+            Destroy(gameObject);
+        }
     }
 }
