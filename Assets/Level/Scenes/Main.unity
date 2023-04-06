@@ -167,9 +167,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa5dedeaa3e77d94ab7ac08d3de62bf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  delayBeforeStartSpawning: 3
   enemyFolder: {fileID: 1871660905}
+  powerUpFolder: {fileID: 399140150}
   enemyPrefab: {fileID: 7931241584318438446, guid: 1bfe7ff240bb82a4eba9d3bb8f06f736, type: 3}
-  spawnRate: 1
+  enemyMinSpawnRate: 0.5
+  enemyMaxSpawnRate: 1
+  tripleShotPrefab: {fileID: 7381546671764764338, guid: 2c52cce61bb5bb54fab4b45a0852b16d, type: 3}
+  powerUpMinSpawnRate: 8
+  powerUpMaxSpawnRate: 12
 --- !u!1 &315742188
 GameObject:
   m_ObjectHideFlags: 0
@@ -264,6 +270,37 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &399140149
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 399140150}
+  m_Layer: 0
+  m_Name: PowerUps
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &399140150
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 399140149}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 10, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &847593169
 GameObject:
   m_ObjectHideFlags: 0
@@ -419,10 +456,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 145e5b129b2cfa149a5de7a0fe27c8f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitPoints: 5
+  hitPoints: 3
   movementSpeed: 7
+  currentAttack: 0
+  laserPrefab: {fileID: 6765962585700456340, guid: e1cb013220ca00c4cbd2c9a5ecea904a, type: 3}
   fireRate: 0.1
-  projectilePrefab: {fileID: 6765962585700456340, guid: e1cb013220ca00c4cbd2c9a5ecea904a, type: 3}
+  tripleShotDuration: 5
+  tripleLaserPrefab: {fileID: 683473647485500136, guid: 53357c880368f5c41b44dc719abaf597, type: 3}
   playerMovement:
     m_Name: Player Movement
     m_Type: 0
@@ -740,7 +780,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1871660904}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.043890897, y: 3.611106, z: -9.177147}
+  m_LocalPosition: {x: 0, y: 10, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

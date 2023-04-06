@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class Enemy : MonoBehaviour
 {
@@ -17,7 +13,6 @@ public class Enemy : MonoBehaviour
     {
         spawnManager = FindObjectOfType<SpawnManager>();
     }
-
     private void Update()
     {
         MoveDown();
@@ -37,7 +32,6 @@ public class Enemy : MonoBehaviour
         Vector3 direction = Vector3.down;
         transform.Translate(direction * (movementSpeed * Time.deltaTime));
     }
-
     private void RespawnAtTop()
     {
         float x = Random.Range(-9f, 9f);
@@ -60,7 +54,6 @@ public class Enemy : MonoBehaviour
                 break;
         }
     }
-
     private void OnTriggerWithLaser(Collider2D col)
     {
         if (col.tag.Equals("Laser"))
@@ -69,12 +62,11 @@ public class Enemy : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
     private void OnTriggerWithPlayer(Collider2D col)
     {
         if (col.tag.Equals("Player"))
         {
-            col.GetComponent<Player>().DamagePlayer(damagePoints);
+            col.GetComponent<Player>().GetDamage(damagePoints);
             Destroy(gameObject);
         }
     }

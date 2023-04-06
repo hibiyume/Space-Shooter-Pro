@@ -1,9 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Numerics;
 using UnityEngine;
-using Vector3 = UnityEngine.Vector3;
 
 public class Laser : MonoBehaviour
 {
@@ -15,6 +10,11 @@ public class Laser : MonoBehaviour
         transform.Translate(Vector3.up * (speed * Time.deltaTime));
 
         if (transform.position.y > 8f)
-            Destroy(gameObject);
+        {
+            if (transform.parent)
+                Destroy(transform.parent.gameObject);
+            else
+                Destroy(gameObject);
+        }
     }
 }
