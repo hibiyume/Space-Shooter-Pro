@@ -1,23 +1,31 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
     [Header("Player Parameters")]
     [SerializeField] private float hitPoints;
+
     [SerializeField] private float movementSpeed;
-    [SerializeField] private AttackType currentAttack = AttackType.BasicAttack;
+    [SerializeField] private AttackTypes currentAttack = AttackTypes.BasicAttack;
     [SerializeField] private GameObject laserPrefab;
     [SerializeField] private float fireRate;
     private float _nextFire = 0f;
-    
-    [Header("Triple Shot Parameters")]
-    [SerializeField] private float tripleShotDuration;
+
+    [Header("Triple Shot PowerUp Parameters")]
+    [SerializeField] private float tripleShotPowerUpDuration;
+
     [SerializeField] private GameObject tripleLaserPrefab;
-    
+
+    [Header("Speed PowerUp Parameters")]
+    [SerializeField] private float speedPowerUpDuration;
+    [SerializeField] private float speedPowerUpMultiplier;
+    private bool _isSpeedPowerUpActive = false;
+
     [Header("Other")]
-    private SpawnManager spawnManager;
+    private SpawnManager _spawnManager;
 
     [Header("Input Controls")]
     [SerializeField] private InputAction playerMovement;
@@ -28,16 +36,16 @@ public class Player : MonoBehaviour
     {
         playerMovement.Enable();
         playerAttack.Enable();
-    }   //New Input System Requirement
+    } //New Input System Requirement
     private void OnDisable()
     {
         playerMovement.Disable();
         playerAttack.Disable();
-    }  //New Input System Requirement
+    } //New Input System Requirement
 
     private void Awake()
     {
-        spawnManager = FindObjectOfType<SpawnManager>();
+        _spawnManager = FindObjectOfType<SpawnManager>();
     }
     void Start()
     {
@@ -57,12 +65,13 @@ public class Player : MonoBehaviour
     private void Move()
     {
         // Moving player
-
         Vector3 direction = playerMovement.ReadValue<Vector2>();
-        transform.Translate(direction * (movementSpeed * Time.deltaTime));
+        if (!_isSpeedPowerUpActive)
+            transform.Translate(direction * (movementSpeed * Time.deltaTime));
+        else
+            transform.Translate(direction * (movementSpeed * speedPowerUpMultiplier * Time.deltaTime));
 
         // Clamping position
-
         float clampedX = Mathf.Clamp(transform.position.x, -9.15f, 9.15f);
         float clampedY = Mathf.Clamp(transform.position.y, -3.9f, 5.9f);
         transform.position = new Vector3(clampedX, clampedY, 0f);
@@ -71,12 +80,12 @@ public class Player : MonoBehaviour
     {
         switch (currentAttack)
         {
-            case AttackType.BasicAttack:
+            case AttackTypes.BasicAttack:
                 Instantiate(laserPrefab,
                     new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z),
                     Quaternion.identity);
                 break;
-            case AttackType.TripleAttack:
+            case AttackTypes.TripleAttack:
                 Instantiate(tripleLaserPrefab,
                     new Vector3(transform.position.x, transform.position.y, transform.position.z),
                     Quaternion.identity);
@@ -84,24 +93,34 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void EnableTripleShot()
+    public void EnableTripleShotPowerUp()
     {
-        currentAttack = AttackType.TripleAttack;
+        currentAttack = AttackTypes.TripleAttack;
         StartCoroutine(DisableTripleShotRoutine());
     }
     private IEnumerator DisableTripleShotRoutine()
     {
-        yield return new WaitForSeconds(tripleShotDuration);
-        currentAttack = AttackType.BasicAttack;
+        yield return new WaitForSeconds(tripleShotPowerUpDuration);
+        currentAttack = AttackTypes.BasicAttack;
     }
-    
+    public void EnableSpeedPowerUp()
+    {
+        StartCoroutine(DisableSpeedRoutine());
+        _isSpeedPowerUpActive = true;
+    }
+    private IEnumerator DisableSpeedRoutine()
+    {
+        yield return new WaitForSeconds(speedPowerUpDuration);
+        _isSpeedPowerUpActive = false;
+    }
+
     public void GetDamage(float damage)
     {
         hitPoints -= damage;
 
         if (hitPoints <= 0)
         {
-            spawnManager.OnPlayerDeath();
+            _spawnManager.OnPlayerDeath();
             Debug.LogWarning("Game Over");
 
             Destroy(gameObject);
@@ -109,8 +128,8 @@ public class Player : MonoBehaviour
     }
 }
 
-enum AttackType
+enum AttackTypes
 {
     BasicAttack,
-    TripleAttack,
+    TripleAttack
 }

@@ -5,7 +5,7 @@ public class SpawnManager : MonoBehaviour
 {
     [Header("Parameters")]
     [SerializeField] private float delayBeforeStartSpawning;
-    
+
     [Header("Folders")]
     [SerializeField] private Transform enemyFolder;
     [SerializeField] private Transform powerUpFolder;
@@ -14,14 +14,14 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private float enemyMinSpawnRate;
     [SerializeField] private float enemyMaxSpawnRate;
-    
+
     [Header("PowerUps")]
     [SerializeField] private GameObject tripleShotPrefab;
     [SerializeField] private float powerUpMinSpawnRate;
     [SerializeField] private float powerUpMaxSpawnRate;
 
     public bool IsPlayerAlive { get; private set; } = true;
-    
+
     private void Start()
     {
         Invoke(nameof(StartSpawning), delayBeforeStartSpawning);
@@ -32,7 +32,7 @@ public class SpawnManager : MonoBehaviour
         StartCoroutine(SpawnEnemyRoutine());
         StartCoroutine(SpawnPowerUpRoutine());
     }
-    
+
     IEnumerator SpawnEnemyRoutine()
     {
         while (IsPlayerAlive)
@@ -41,7 +41,7 @@ public class SpawnManager : MonoBehaviour
             float y = enemyPrefab.transform.position.y;
             Vector2 spawnPos = new Vector2(x, y);
             Instantiate(enemyPrefab, spawnPos, Quaternion.identity, enemyFolder);
-            
+
             yield return new WaitForSeconds(Random.Range(enemyMinSpawnRate, enemyMaxSpawnRate));
         }
     }
@@ -50,12 +50,12 @@ public class SpawnManager : MonoBehaviour
         while (IsPlayerAlive)
         {
             GameObject powerUpPrefab = tripleShotPrefab; //TODO make other powerUps
-            
+
             float x = Random.Range(-9f, 9f);
             float y = powerUpPrefab.transform.position.y;
             Vector2 spawnPos = new Vector2(x, y);
             Instantiate(powerUpPrefab, spawnPos, Quaternion.identity, powerUpFolder);
-            
+
             yield return new WaitForSeconds(Random.Range(powerUpMinSpawnRate, powerUpMaxSpawnRate));
         }
     }

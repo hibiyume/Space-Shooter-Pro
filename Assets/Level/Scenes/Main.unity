@@ -461,8 +461,10 @@ MonoBehaviour:
   currentAttack: 0
   laserPrefab: {fileID: 6765962585700456340, guid: e1cb013220ca00c4cbd2c9a5ecea904a, type: 3}
   fireRate: 0.1
-  tripleShotDuration: 5
+  tripleShotPowerUpDuration: 5
   tripleLaserPrefab: {fileID: 683473647485500136, guid: 53357c880368f5c41b44dc719abaf597, type: 3}
+  speedPowerUpDuration: 5
+  speedPowerUpMultiplier: 2
   playerMovement:
     m_Name: Player Movement
     m_Type: 0

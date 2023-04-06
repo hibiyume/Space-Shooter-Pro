@@ -2,8 +2,9 @@ using UnityEngine;
 
 public class PowerUp : MonoBehaviour
 {
+    [SerializeField] private PowerUpTypes powerUpType;
     [SerializeField] private float movementSpeed;
-    
+
     private void Update()
     {
         Move();
@@ -24,8 +25,23 @@ public class PowerUp : MonoBehaviour
     {
         if (col.tag.Equals("Player"))
         {
-            col.GetComponent<Player>().EnableTripleShot();
+            switch (powerUpType)
+            {
+                case PowerUpTypes.TripleShot:
+                    col.GetComponent<Player>().EnableTripleShotPowerUp();
+                    break;
+                case PowerUpTypes.Speed:
+                    col.GetComponent<Player>().EnableSpeedPowerUp();
+                    break;
+            }
+
             Destroy(gameObject);
         }
     }
+}
+
+enum PowerUpTypes
+{
+    TripleShot,
+    Speed,
 }
