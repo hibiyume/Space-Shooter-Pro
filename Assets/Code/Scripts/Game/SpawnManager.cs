@@ -21,13 +21,8 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private float powerUpMaxSpawnRate;
 
     public bool IsPlayerAlive { get; private set; } = true;
-
-    private void Start()
-    {
-        Invoke(nameof(StartSpawning), delayBeforeStartSpawning);
-    }
-
-    private void StartSpawning()
+    
+    public void StartSpawning()
     {
         StartCoroutine(SpawnEnemyRoutine());
         StartCoroutine(SpawnPowerUpRoutine());
@@ -35,6 +30,7 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnEnemyRoutine()
     {
+        yield return new WaitForSeconds(delayBeforeStartSpawning);
         while (IsPlayerAlive)
         {
             float x = Random.Range(-9f, 9f);
@@ -47,6 +43,7 @@ public class SpawnManager : MonoBehaviour
     }
     IEnumerator SpawnPowerUpRoutine()
     {
+        yield return new WaitForSeconds(delayBeforeStartSpawning);
         while (IsPlayerAlive)
         {
             GameObject powerUpPrefab = powerUpPrefabs[Random.Range(0, powerUpPrefabs.Length)];

@@ -7,14 +7,18 @@ public class Enemy : MonoBehaviour
     [SerializeField] private int damagePoints;
     [SerializeField] private int scoreWhenDestroyed;
 
+    [Header("Animation Parameters")]
+    private Animator _animator;
+
     [Header("Other")]
     private SpawnManager _spawnManager;
-    private Player _player; 
+    private Player _player;
 
     private void Awake()
     {
         _spawnManager = FindObjectOfType<SpawnManager>();
         _player = FindObjectOfType<Player>();
+        _animator = GetComponent<Animator>();
     }
     private void Update()
     {
@@ -59,19 +63,22 @@ public class Enemy : MonoBehaviour
     }
     private void OnTriggerWithLaser(Collider2D col)
     {
-        if (col.tag.Equals("Laser"))
-        {
-            _player.AddScore(scoreWhenDestroyed);
-            Destroy(col.gameObject);
-            Destroy(gameObject);
-        }
+        _player.AddScore(scoreWhenDestroyed);
+        _animator.SetTrigger("OnEnemyDeath");
+        movementSpeed *= 0.33f;
+
+        Destroy(col.gameObject);
+        Destroy(gameObject.GetComponent<BoxCollider2D>());
+        Destroy(gameObject, 1.3f);
     }
     private void OnTriggerWithPlayer(Collider2D col)
     {
-        if (col.tag.Equals("Player"))
-        {
-            col.GetComponent<Player>().GetDamage(damagePoints);
-            Destroy(gameObject);
-        }
+        _player.AddScore(scoreWhenDestroyed);
+        _animator.SetTrigger("OnEnemyDeath");
+        movementSpeed *= 0.33f;
+        
+        col.GetComponent<Player>().GetDamage(damagePoints);
+        Destroy(gameObject.GetComponent<BoxCollider2D>());
+        Destroy(gameObject, 1.3f);
     }
 }

@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float movementSpeed;
     [SerializeField] private AttackTypes currentAttack = AttackTypes.BasicAttack;
     [SerializeField] private GameObject laserPrefab;
+    [SerializeField] private GameObject explosionPrefab;
     [SerializeField] private float fireRate;
     private float _nextFire = 0f;
     private enum AttackTypes
@@ -16,6 +17,7 @@ public class Player : MonoBehaviour
         BasicAttack,
         TripleAttack
     }
+    [SerializeField] private GameObject[] playerEngineReferences;
 
     [Header("Gameplay Parameters")]
     [SerializeField] private long playerScore;
@@ -137,14 +139,25 @@ public class Player : MonoBehaviour
             shieldPowerUpReference.SetActive(false);
             _hasShield = false;
         }
-
-        if (hitPoints <= 0)
+        
+        switch (hitPoints)
         {
-            _spawnManager.OnPlayerDeath();
-            _gameManager.GameOver();
-            IsPlayerAlive = false;
+            case 2:
+                playerEngineReferences[Random.Range(0, 2)].SetActive(true);
+                break;
+            case 1:
+                playerEngineReferences[0].SetActive(true);
+                playerEngineReferences[1].SetActive(true);
+                break;
+            case 0:
+                _spawnManager.OnPlayerDeath();
+                _gameManager.GameOver();
+                IsPlayerAlive = false;
 
-            Destroy(gameObject);
+                Destroy(Instantiate(explosionPrefab, transform.position, Quaternion.identity), 2.5f);
+                Destroy(gameObject, 0.25f);
+                Destroy(this); //script
+                break;
         }
     }
     public void AddScore(long score)
