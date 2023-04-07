@@ -173,4 +173,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSpeed: 4
   damagePoints: 1
-  spawnManager: {fileID: 0}
+  scoreWhenDestroyed: 10

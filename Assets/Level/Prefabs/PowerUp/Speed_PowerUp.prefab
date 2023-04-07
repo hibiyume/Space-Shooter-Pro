@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7604261339354036404}
   - component: {fileID: 4133388448966586348}
   - component: {fileID: 1871304633629641013}
+  - component: {fileID: 8726490584890321242}
   m_Layer: 0
   m_Name: Speed_PowerUp
   m_TagString: Untagged
@@ -28,12 +29,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 684477649814417859}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalPosition: {x: 0, y: 8, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &611846656060759635
 SpriteRenderer:
@@ -161,5 +162,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67e17cfd6316766458efe18c8aadda84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 3
   powerUpType: 1
+  movementSpeed: 3
+--- !u!95 &8726490584890321242
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684477649814417859}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 72bb0b868486f0d42baac6171cc03ed1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
