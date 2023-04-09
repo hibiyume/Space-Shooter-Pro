@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [Header("Game Parameters")]
-    private bool _isGameOver;
+    // nothing yet
 
     [Header("Other")]
     [SerializeField] private int gameSceneId;
@@ -30,7 +30,6 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        _isGameOver = true;
         restartLevel.Enable();
     }
 }
