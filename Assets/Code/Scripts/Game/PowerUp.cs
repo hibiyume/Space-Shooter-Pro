@@ -1,9 +1,15 @@
+using System;
 using UnityEngine;
 
 public class PowerUp : MonoBehaviour
 {
+    [Header("Power Up Parameters")]
     [SerializeField] private PowerUpTypes powerUpType;
     [SerializeField] private float movementSpeed;
+    
+    [Header("Audio")]
+    [SerializeField] private AudioClip powerUpPickupAudioClip;
+    
     private enum PowerUpTypes
     {
         TripleShot,
@@ -44,7 +50,12 @@ public class PowerUp : MonoBehaviour
                     break;
             }
 
+            AudioSource.PlayClipAtPoint(powerUpPickupAudioClip, transform.position);
+            
             Destroy(gameObject);
+            /*Destroy(GetComponent<CircleCollider2D>());
+            Destroy(GetComponent<SpriteRenderer>());
+            Destroy(gameObject, 2.5f);*/
         }
     }
 }

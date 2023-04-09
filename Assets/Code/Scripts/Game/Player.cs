@@ -39,7 +39,11 @@ public class Player : MonoBehaviour
     private SpawnManager _spawnManager;
     private UIManager _uiManager;
     private GameManager _gameManager;
-
+    private AudioSource _audioSource;
+    
+    [Header("Audio")]
+    [SerializeField] private AudioClip laserAudioClip;
+    
     [Header("Input Controls")]
     [SerializeField] private InputAction playerMovement;
     [SerializeField] private InputAction playerAttack;
@@ -60,6 +64,7 @@ public class Player : MonoBehaviour
         _spawnManager = FindObjectOfType<SpawnManager>();
         _uiManager = FindObjectOfType<UIManager>();
         _gameManager = FindObjectOfType<GameManager>();
+        _audioSource = GetComponent<AudioSource>();
     }
     void Update()
     {
@@ -98,6 +103,9 @@ public class Player : MonoBehaviour
                     Quaternion.identity);
                 break;
         }
+
+        _audioSource.clip = laserAudioClip;
+        _audioSource.Play();
     }
 
     public void EnableTripleShotPowerUp()
