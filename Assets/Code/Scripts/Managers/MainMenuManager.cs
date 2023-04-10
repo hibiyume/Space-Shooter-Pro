@@ -4,10 +4,16 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour
 {
-    [SerializeField] private int gameSceneId;
+    [SerializeField] private int singleplayerGameSceneId;
+    [SerializeField] private int coopGameSceneId;
 
-    public void LoadGameScene()
+    public void LoadSinglePlayerGameScene()
     {
-        SceneManager.LoadScene(gameSceneId);
+        SceneManager.LoadScene(singleplayerGameSceneId);
+    }
+    
+    public void LoadCoopGameScene()
+    {
+        SceneManager.LoadScene(coopGameSceneId);
     } 
 }

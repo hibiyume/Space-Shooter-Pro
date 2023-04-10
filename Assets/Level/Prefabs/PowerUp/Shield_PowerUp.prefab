@@ -75,8 +75,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 499653275
-  m_SortingLayer: 2
+  m_SortingLayerID: -640434187
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: e2f5f1638e62545a09c5d6e6d3643101, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -257,4 +257,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   powerUpType: 2
   movementSpeed: 3
-  powerUpPickupAudioClip: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}

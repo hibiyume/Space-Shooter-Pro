@@ -45,3 +45,21 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Laser
+    uniqueID: 3865571675
+    locked: 0
+  - name: Enemy
+    uniqueID: 3950082421
+    locked: 0
+  - name: PowerUp
+    uniqueID: 3654533109
+    locked: 0
+  - name: Player
+    uniqueID: 2608043841
+    locked: 0
+  - name: Explosion
+    uniqueID: 3813043629
+    locked: 0
+  - name: UI
+    uniqueID: 2728022235
+    locked: 0
