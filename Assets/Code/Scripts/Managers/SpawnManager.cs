@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class SpawnManager : MonoBehaviour
 {
@@ -20,8 +22,14 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private float powerUpMinSpawnRate;
     [SerializeField] private float powerUpMaxSpawnRate;
 
-    public bool IsPlayerAlive { get; private set; } = true;
-    
+    [Header("Other")]
+    [SerializeField] private GameManager _gameManager;
+
+    private void Awake()
+    {
+        _gameManager = FindObjectOfType<GameManager>();
+    }
+
     public void StartSpawning()
     {
         StartCoroutine(SpawnEnemyRoutine());
@@ -31,21 +39,26 @@ public class SpawnManager : MonoBehaviour
     IEnumerator SpawnEnemyRoutine()
     {
         yield return new WaitForSeconds(delayBeforeStartSpawning);
-        while (IsPlayerAlive)
+        while (_gameManager.IsPlayerAlive)
         {
+            yield return new WaitForSeconds(Random.Range(enemyMinSpawnRate, enemyMaxSpawnRate));
+            
             float x = Random.Range(-9f, 9f);
             float y = enemyPrefab.transform.position.y;
             Vector2 spawnPos = new Vector2(x, y);
             Instantiate(enemyPrefab, spawnPos, Quaternion.identity, enemyFolder);
 
-            yield return new WaitForSeconds(Random.Range(enemyMinSpawnRate, enemyMaxSpawnRate));
+            if (!_gameManager.IsPlayerAlive)
+                StopSpawning();
         }
     }
     IEnumerator SpawnPowerUpRoutine()
     {
         yield return new WaitForSeconds(delayBeforeStartSpawning);
-        while (IsPlayerAlive)
+        while (_gameManager.IsPlayerAlive)
         {
+            yield return new WaitForSeconds(Random.Range(powerUpMinSpawnRate, powerUpMaxSpawnRate));
+            
             GameObject powerUpPrefab = powerUpPrefabs[Random.Range(0, powerUpPrefabs.Length)];
 
             float x = Random.Range(-9f, 9f);
@@ -53,12 +66,14 @@ public class SpawnManager : MonoBehaviour
             Vector2 spawnPos = new Vector2(x, y);
             Instantiate(powerUpPrefab, spawnPos, Quaternion.identity, powerUpFolder);
 
-            yield return new WaitForSeconds(Random.Range(powerUpMinSpawnRate, powerUpMaxSpawnRate));
+            if (!_gameManager.IsPlayerAlive)
+                StopSpawning();
         }
     }
-
-    public void OnPlayerDeath()
+    
+    private void StopSpawning()
     {
-        IsPlayerAlive = false;
+        StopCoroutine(SpawnEnemyRoutine());
+        StopCoroutine(SpawnPowerUpRoutine());
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class PowerUp : MonoBehaviour
@@ -6,17 +7,20 @@ public class PowerUp : MonoBehaviour
     [Header("Power Up Parameters")]
     [SerializeField] private PowerUpTypes powerUpType;
     [SerializeField] private float movementSpeed;
-    
-    [Header("Audio")]
-    [SerializeField] private AudioClip powerUpPickupAudioClip;
-    
     private enum PowerUpTypes
     {
         TripleShot,
         Speed,
         Shield
     }
+    
+    [Header("Audio")]
+    private AudioSource _audioSource;
 
+    private void Awake()
+    {
+        _audioSource = GetComponent<AudioSource>();
+    }
     private void Update()
     {
         Move();
@@ -50,12 +54,21 @@ public class PowerUp : MonoBehaviour
                     break;
             }
 
-            AudioSource.PlayClipAtPoint(powerUpPickupAudioClip, transform.position);
+            _audioSource.Play();
             
-            Destroy(gameObject);
-            /*Destroy(GetComponent<CircleCollider2D>());
-            Destroy(GetComponent<SpriteRenderer>());
-            Destroy(gameObject, 2.5f);*/
+            DestroyComponents();
+            StartCoroutine(DestroyPowerUp());
         }
+    }
+
+    private void DestroyComponents()
+    {
+        Destroy(GetComponent<CircleCollider2D>());
+        Destroy(GetComponent<SpriteRenderer>());
+    }
+    private IEnumerator DestroyPowerUp()
+    {
+        yield return new WaitUntil(() => !_audioSource.isPlaying);
+        Destroy(gameObject);
     }
 }

@@ -7,9 +7,7 @@ public class Player : MonoBehaviour
     [Header("Player Parameters")]
     [SerializeField] private int hitPoints;
     [SerializeField] private float movementSpeed;
-    [SerializeField] private AttackTypes currentAttack = AttackTypes.BasicAttack;
     [SerializeField] private GameObject laserPrefab;
-    [SerializeField] private GameObject explosionPrefab;
     [SerializeField] private float fireRate;
     private float _nextFire = 0f;
     private enum AttackTypes
@@ -17,12 +15,10 @@ public class Player : MonoBehaviour
         BasicAttack,
         TripleAttack
     }
+    [SerializeField] private AttackTypes currentAttack = AttackTypes.BasicAttack;
+    [SerializeField] private GameObject explosionPrefab;
     [SerializeField] private GameObject[] playerEngineReferences;
-
-    [Header("Gameplay Parameters")]
-    [SerializeField] private long playerScore;
-    public bool IsPlayerAlive { get; private set; } = true;
-
+    
     [Header("Triple Shot PowerUp Parameters")]
     [SerializeField] private float tripleShotPowerUpDuration;
     [SerializeField] private GameObject tripleLaserPrefab;
@@ -39,9 +35,9 @@ public class Player : MonoBehaviour
     private SpawnManager _spawnManager;
     private UIManager _uiManager;
     private GameManager _gameManager;
-    private AudioSource _audioSource;
     
     [Header("Audio")]
+    private AudioSource _audioSource;
     [SerializeField] private AudioClip laserAudioClip;
     
     [Header("Input Controls")]
@@ -52,12 +48,12 @@ public class Player : MonoBehaviour
     {
         playerMovement.Enable();
         playerAttack.Enable();
-    } //New Input System Requirement
+    }
     private void OnDisable()
     {
         playerMovement.Disable();
         playerAttack.Disable();
-    } //New Input System Requirement
+    }
 
     private void Awake()
     {
@@ -70,11 +66,7 @@ public class Player : MonoBehaviour
     {
         Move();
 
-        if (playerAttack.triggered && Time.time > _nextFire)
-        {
-            _nextFire = Time.time + fireRate;
-            Fire();
-        }
+        TryToFire();
     }
 
     private void Move()
@@ -88,6 +80,14 @@ public class Player : MonoBehaviour
         float clampedY = Mathf.Clamp(transform.position.y, -3.9f, 5.9f);
         transform.position = new Vector3(clampedX, clampedY, 0f);
     }
+    private void TryToFire()
+    {
+        if (playerAttack.triggered && Time.time > _nextFire)
+        {
+            _nextFire = Time.time + fireRate;
+            Fire();
+        }
+    }
     private void Fire()
     {
         switch (currentAttack)
@@ -96,18 +96,19 @@ public class Player : MonoBehaviour
                 Instantiate(laserPrefab,
                     new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z),
                     Quaternion.identity);
+                _audioSource.pitch = 1f;
                 break;
             case AttackTypes.TripleAttack:
                 Instantiate(tripleLaserPrefab,
                     new Vector3(transform.position.x, transform.position.y, transform.position.z),
                     Quaternion.identity);
+                _audioSource.pitch = 0.66f;
                 break;
         }
-
         _audioSource.clip = laserAudioClip;
         _audioSource.Play();
     }
-
+    
     public void EnableTripleShotPowerUp()
     {
         currentAttack = AttackTypes.TripleAttack;
@@ -158,19 +159,16 @@ public class Player : MonoBehaviour
                 playerEngineReferences[1].SetActive(true);
                 break;
             case 0:
-                _spawnManager.OnPlayerDeath();
-                _gameManager.GameOver();
-                IsPlayerAlive = false;
+                _gameManager.OnGameOver();
 
-                Destroy(Instantiate(explosionPrefab, transform.position, Quaternion.identity), 2.5f);
-                Destroy(gameObject, 0.25f);
-                Destroy(this); //script
+                DestroyPlayer();
                 break;
         }
     }
-    public void AddScore(long score)
+    private void DestroyPlayer()
     {
-        playerScore += score;
-        _uiManager.UpdateScoreText(playerScore);
+        Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        Destroy(gameObject, 0.25f);
+        Destroy(this); //script
     }
 }

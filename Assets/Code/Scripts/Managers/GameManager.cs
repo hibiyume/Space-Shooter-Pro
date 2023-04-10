@@ -7,10 +7,12 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [Header("Game Parameters")]
-    // nothing yet
-
+    [SerializeField] private long playerScore = 0;
+    public bool IsPlayerAlive { get; private set; } = true;
+    
     [Header("Other")]
     [SerializeField] private int gameSceneId;
+    private UIManager _uiManager;
     
     [Header("Input Controls")]
     [SerializeField] private InputAction restartLevel;
@@ -19,7 +21,11 @@ public class GameManager : MonoBehaviour
     {
         restartLevel.Disable();
     }
-    
+
+    private void Awake()
+    {
+        _uiManager = FindObjectOfType<UIManager>();
+    }
     private void Update()
     {
         if (restartLevel.triggered)
@@ -28,8 +34,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void GameOver()
+    public void AddScore(int score)
     {
+        playerScore += score;
+        _uiManager.UpdateScoreText(playerScore);
+    }
+    
+    public void OnGameOver()
+    {
+        IsPlayerAlive = false;
         restartLevel.Enable();
     }
 }

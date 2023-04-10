@@ -4,9 +4,10 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Laser
-  - Enemy
   - Audio Manager
+  - Enemy
+  - EnemyLaser
+  - PlayerLaser
   layers:
   - Default
   - TransparentFX
@@ -14,7 +15,7 @@ TagManager:
   - 
   - Water
   - UI
-  - Post Processing
+  - 
   - 
   - 
   - 
@@ -43,22 +44,4 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
-    locked: 0
-  - name: Background
-    uniqueID: 269096851
-    locked: 0
-  - name: PowerUp
-    uniqueID: 499653275
-    locked: 0
-  - name: Enemy
-    uniqueID: 2358310397
-    locked: 0
-  - name: Player
-    uniqueID: 10151055
-    locked: 0
-  - name: Massive
-    uniqueID: 3749230305
-    locked: 0
-  - name: Interface
-    uniqueID: 2908392645
     locked: 0
