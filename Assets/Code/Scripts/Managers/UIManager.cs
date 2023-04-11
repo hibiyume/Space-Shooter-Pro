@@ -7,16 +7,25 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     [Header("References")]
+    [SerializeField] private TextMeshProUGUI highscoreText;
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private Image player1livesImage;
     [SerializeField] private Image player2livesImage;
     [SerializeField] private GameObject gameOverTextFolder;
+    [SerializeField] private TextMeshProUGUI gameOverScoreText;
     
     [Header("Other")]
     [SerializeField] private Sprite[] livesSprites;
+    private GameManager _gameManager;
 
+    private void Awake()
+    {
+        _gameManager = FindObjectOfType<GameManager>();
+    }
     private void Start()
     {
+        if (!_gameManager.IsCoopMode())
+            highscoreText.text = "High score : " + PlayerPrefs.GetInt("Highscore").ToString();
         scoreText.text = "0";
     }
 
@@ -34,6 +43,7 @@ public class UIManager : MonoBehaviour
 
     public void ShowGameOverContent()
     {
+        gameOverScoreText.text = $"Your score : {scoreText.text}";
         gameOverTextFolder.SetActive(true);
     }
 }

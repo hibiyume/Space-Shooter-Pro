@@ -7,8 +7,9 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [Header("Game Parameters")]
-    [SerializeField] private long playerScore = 0;
+    [SerializeField] private int playerScore = 0;
     [SerializeField] private bool isCoopMode;
+    public bool IsCoopMode() { return isCoopMode; }
     public bool IsGamePaused { get; private set; }
     public bool ArePlayersAlive { get; private set; } = true;
     private bool _isPlayer1Alive = true;
@@ -19,7 +20,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int mainMenuSceneId;
     [SerializeField] private int gameSceneId;
     private UIManager _uiManager;
-    
+
     [Header("Input Controls")]
     [SerializeField] private InputAction restartLevel;
     [SerializeField] private InputAction pauseGame;
@@ -47,7 +48,7 @@ public class GameManager : MonoBehaviour
                 SceneManager.LoadScene(gameSceneId); // Current game scene
             }
         }
-        
+
         if (pauseGame.triggered)
         {
             PauseOrUnpauseGame();
@@ -59,8 +60,16 @@ public class GameManager : MonoBehaviour
         ArePlayersAlive = false;
         _uiManager.ShowGameOverContent();
         restartLevel.Enable();
+
+        if (!isCoopMode)
+            SaveHighscore();
     }
-    
+    private void SaveHighscore()
+    {
+        if (PlayerPrefs.GetInt("Highscore") < playerScore)
+            PlayerPrefs.SetInt("Highscore", playerScore);
+    }
+
     public void PauseOrUnpauseGame()
     {
         if (!pauseGameFolder.activeSelf)
@@ -98,9 +107,6 @@ public class GameManager : MonoBehaviour
         if ((!_isPlayer1Alive && !_isPlayer2Alive) || !isCoopMode)
         {
             OnGameOver();
-            print(_isPlayer1Alive);
-            print(_isPlayer2Alive);
-            print(isCoopMode);
         }
     }
 }
