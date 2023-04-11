@@ -23,7 +23,7 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private float powerUpMaxSpawnRate;
 
     [Header("Other")]
-    [SerializeField] private GameManager _gameManager;
+    private GameManager _gameManager;
 
     private void Awake()
     {
@@ -39,7 +39,7 @@ public class SpawnManager : MonoBehaviour
     IEnumerator SpawnEnemyRoutine()
     {
         yield return new WaitForSeconds(delayBeforeStartSpawning);
-        while (_gameManager.IsPlayerAlive)
+        while (_gameManager.ArePlayersAlive)
         {
             yield return new WaitForSeconds(Random.Range(enemyMinSpawnRate, enemyMaxSpawnRate));
             
@@ -48,14 +48,14 @@ public class SpawnManager : MonoBehaviour
             Vector2 spawnPos = new Vector2(x, y);
             Instantiate(enemyPrefab, spawnPos, Quaternion.identity, enemyFolder);
 
-            if (!_gameManager.IsPlayerAlive)
+            if (_gameManager.ArePlayersAlive)
                 StopSpawning();
         }
     }
     IEnumerator SpawnPowerUpRoutine()
     {
         yield return new WaitForSeconds(delayBeforeStartSpawning);
-        while (_gameManager.IsPlayerAlive)
+        while (_gameManager.ArePlayersAlive)
         {
             yield return new WaitForSeconds(Random.Range(powerUpMinSpawnRate, powerUpMaxSpawnRate));
             
@@ -66,7 +66,7 @@ public class SpawnManager : MonoBehaviour
             Vector2 spawnPos = new Vector2(x, y);
             Instantiate(powerUpPrefab, spawnPos, Quaternion.identity, powerUpFolder);
 
-            if (!_gameManager.IsPlayerAlive)
+            if (!_gameManager.ArePlayersAlive)
                 StopSpawning();
         }
     }

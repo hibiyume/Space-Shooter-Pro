@@ -8,18 +8,30 @@ public class GameManager : MonoBehaviour
 {
     [Header("Game Parameters")]
     [SerializeField] private long playerScore = 0;
-    public bool IsPlayerAlive { get; private set; } = true;
-    
+    [SerializeField] private bool isCoopMode;
+    public bool IsGamePaused { get; private set; }
+    public bool ArePlayersAlive { get; private set; } = true;
+    private bool _isPlayer1Alive = true;
+    private bool _isPlayer2Alive = true;
+
     [Header("Other")]
+    [SerializeField] private GameObject pauseGameFolder;
+    [SerializeField] private int mainMenuSceneId;
     [SerializeField] private int gameSceneId;
     private UIManager _uiManager;
     
     [Header("Input Controls")]
     [SerializeField] private InputAction restartLevel;
+    [SerializeField] private InputAction pauseGame;
 
+    private void OnEnable()
+    {
+        pauseGame.Enable();
+    }
     private void OnDisable()
     {
         restartLevel.Disable();
+        pauseGame.Disable();
     }
 
     private void Awake()
@@ -28,21 +40,67 @@ public class GameManager : MonoBehaviour
     }
     private void Update()
     {
-        if (restartLevel.triggered)
+        if (!IsGamePaused)
         {
-            SceneManager.LoadScene(gameSceneId); // Current game scene
+            if (restartLevel.triggered)
+            {
+                SceneManager.LoadScene(gameSceneId); // Current game scene
+            }
+        }
+        
+        if (pauseGame.triggered)
+        {
+            PauseOrUnpauseGame();
         }
     }
 
+    private void OnGameOver()
+    {
+        ArePlayersAlive = false;
+        _uiManager.ShowGameOverContent();
+        restartLevel.Enable();
+    }
+    
+    public void PauseOrUnpauseGame()
+    {
+        if (!pauseGameFolder.activeSelf)
+        {
+            Time.timeScale = 0f;
+            IsGamePaused = true;
+            pauseGameFolder.SetActive(true);
+        }
+        else
+        {
+            Time.timeScale = 1f;
+            IsGamePaused = false;
+            pauseGameFolder.SetActive(false);
+        }
+    }
+    public void ReturnToMainMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(mainMenuSceneId);
+    }
     public void AddScore(int score)
     {
         playerScore += score;
         _uiManager.UpdateScoreText(playerScore);
     }
-    
-    public void OnGameOver()
+    public void OnPlayerDeath(string playerTag)
     {
-        IsPlayerAlive = false;
-        restartLevel.Enable();
+        if (playerTag.Equals("Player1"))
+        {
+            _isPlayer1Alive = false;
+        }
+        else if (playerTag.Equals("Player2"))
+            _isPlayer2Alive = false;
+
+        if ((!_isPlayer1Alive && !_isPlayer2Alive) || !isCoopMode)
+        {
+            OnGameOver();
+            print(_isPlayer1Alive);
+            print(_isPlayer2Alive);
+            print(isCoopMode);
+        }
     }
 }

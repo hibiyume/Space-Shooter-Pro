@@ -21,7 +21,7 @@ public class PowerUp : MonoBehaviour
     {
         _audioSource = GetComponent<AudioSource>();
     }
-    private void Update()
+    private void FixedUpdate()
     {
         Move();
 
@@ -39,7 +39,7 @@ public class PowerUp : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.tag.Equals("Player"))
+        if (col.tag.Equals("Player1") || col.tag.Equals("Player2"))
         {
             switch (powerUpType)
             {

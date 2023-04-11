@@ -8,17 +8,13 @@ public class UIManager : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private TextMeshProUGUI scoreText;
-    [SerializeField] private Image livesImage;
+    [SerializeField] private Image player1livesImage;
+    [SerializeField] private Image player2livesImage;
     [SerializeField] private GameObject gameOverTextFolder;
     
     [Header("Other")]
     [SerializeField] private Sprite[] livesSprites;
-    private Player _player;
 
-    private void Awake()
-    {
-        _player = FindObjectOfType<Player>();
-    }
     private void Start()
     {
         scoreText.text = "0";
@@ -28,12 +24,16 @@ public class UIManager : MonoBehaviour
     {
         scoreText.text = score.ToString();
     }
-    public void UpdateLivesImage(int currentLives)
+    public void UpdateLivesImage(int currentLives, string playerTag)
     {
-        livesImage.sprite = livesSprites[currentLives];
-        if (currentLives == 0)
-        {
-            gameOverTextFolder.SetActive(true);
-        }
+        if (playerTag.Equals("Player1"))
+            player1livesImage.sprite = livesSprites[currentLives];
+        else if (playerTag.Equals("Player2"))
+            player2livesImage.sprite = livesSprites[currentLives];
+    }
+
+    public void ShowGameOverContent()
+    {
+        gameOverTextFolder.SetActive(true);
     }
 }

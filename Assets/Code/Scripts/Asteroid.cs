@@ -10,22 +10,25 @@ public class Asteroid : MonoBehaviour
 
     [Header("Other")]
     private SpawnManager _spawnManager;
-    private AudioSource _audioSource;
 
     private void Awake()
     {
         _spawnManager = FindObjectOfType<SpawnManager>();
-        _audioSource = GetComponent<AudioSource>();
     }
 
     private void FixedUpdate()
+    {
+        RotateAsteroid();
+    }
+    
+    private void RotateAsteroid()
     {
         transform.Rotate(Vector3.forward * (rotationSpeed * Time.deltaTime));
     }
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.tag.Equals("Player") || col.tag.Equals("PlayerLaser"))
+        if (col.tag.Equals("Player1") || col.tag.Equals("Player2") || col.tag.Equals("PlayerLaser"))
         {
             _spawnManager.StartSpawning();
 
@@ -33,7 +36,7 @@ public class Asteroid : MonoBehaviour
             Destroy(gameObject.GetComponent<SpriteRenderer>(), 0.33f);
             Destroy(Instantiate(explosionPrefab, transform.position, Quaternion.identity), 2.5f);
             
-            if (col.tag.Equals("Player"))
+            if (col.tag.Equals("Player1") || col.tag.Equals("Player2"))
                 col.GetComponent<Player>().GetDamage(2);
             else if (col.tag.Equals("PlayerLaser"))
                 Destroy(col.gameObject);

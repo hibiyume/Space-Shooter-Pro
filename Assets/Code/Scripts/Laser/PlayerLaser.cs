@@ -7,14 +7,7 @@ public class PlayerLaser : MonoBehaviour
     [SerializeField] private float speed = 8f;
     private const int Damage = 1;
 
-    [Header("Other")]
-    private Player _player;
-
-    private void Awake()
-    {
-        _player = FindObjectOfType<Player>();
-    }
-    private void Update()
+    private void FixedUpdate()
     {
         Move();
 

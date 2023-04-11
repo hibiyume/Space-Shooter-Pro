@@ -21,25 +21,21 @@ public class Enemy : MonoBehaviour
     [SerializeField] private AudioClip laserSoundClip;
 
     [Header("Other")]
-    private Player _player;
     private GameManager _gameManager;
-    private SpawnManager _spawnManager;
     private Animator _animator;
 
     private void Awake()
     {
         _gameManager = FindObjectOfType<GameManager>();
-        _spawnManager = FindObjectOfType<SpawnManager>();
-        _player = FindObjectOfType<Player>();
         _animator = GetComponent<Animator>();
         _audioSource = GetComponent<AudioSource>();
     }
-    private void Update()
+    private void FixedUpdate()
     {
         MoveDown();
         RespawnAtTopIfOutOfBounds();
 
-        if (Time.time > _canFire && !_isDestroyed && _gameManager.IsPlayerAlive)
+        if (Time.time > _canFire && !_isDestroyed && _gameManager.ArePlayersAlive)
         {
             Fire();
             _canFire = Time.time + Random.Range(minFireRate, maxFireRate);
@@ -55,7 +51,7 @@ public class Enemy : MonoBehaviour
     {
         if (transform.position.y < -6f)
         {
-            if (_gameManager.IsPlayerAlive)
+            if (_gameManager.ArePlayersAlive)
             {
                 Vector3 newPos = new Vector3(Random.Range(-9f, 9f), 8f, transform.position.z);
                 transform.position = newPos;
@@ -76,7 +72,7 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.tag.Equals("Player") || col.tag.Equals("PlayerLaser"))
+        if (col.tag.Equals("Player1") || col.tag.Equals("Player2") || col.tag.Equals("PlayerLaser"))
             OnTriggerWithEnemy(col);
     }
     private void OnTriggerWithEnemy(Collider2D col)
@@ -89,8 +85,8 @@ public class Enemy : MonoBehaviour
         _audioSource.clip = explosionSoundClip;
         _audioSource.Play();
 
-        if (col.tag.Equals("Player"))
-            _player.GetDamage(Damage);
+        if (col.tag.Equals("Player1") || col.tag.Equals("Player2"))
+            col.GetComponent<Player>().GetDamage(Damage);
         else if (col.tag.Equals("PlayerLaser"))
             Destroy(col.gameObject);
 

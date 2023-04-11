@@ -7,18 +7,20 @@ public class Player : MonoBehaviour
     [Header("Player Parameters")]
     [SerializeField] private int hitPoints;
     [SerializeField] private float movementSpeed;
-    [SerializeField] private GameObject laserPrefab;
     [SerializeField] private float fireRate;
     private float _nextFire = 0f;
+
     private enum AttackTypes
     {
         BasicAttack,
         TripleAttack
     }
+
     [SerializeField] private AttackTypes currentAttack = AttackTypes.BasicAttack;
+    [SerializeField] private GameObject laserPrefab;
     [SerializeField] private GameObject explosionPrefab;
     [SerializeField] private GameObject[] playerEngineReferences;
-    
+
     [Header("Triple Shot PowerUp Parameters")]
     [SerializeField] private float tripleShotPowerUpDuration;
     [SerializeField] private GameObject tripleLaserPrefab;
@@ -29,17 +31,17 @@ public class Player : MonoBehaviour
 
     [Header("Shield PowerUp Parameters")]
     [SerializeField] private GameObject shieldPowerUpReference;
-    private bool _hasShield = false;
+    private bool _hasShield;
 
     [Header("Other")]
-    private SpawnManager _spawnManager;
     private UIManager _uiManager;
     private GameManager _gameManager;
-    
+    private Animator _animator;
+
     [Header("Audio")]
     private AudioSource _audioSource;
     [SerializeField] private AudioClip laserAudioClip;
-    
+
     [Header("Input Controls")]
     [SerializeField] private InputAction playerMovement;
     [SerializeField] private InputAction playerAttack;
@@ -57,16 +59,19 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        _spawnManager = FindObjectOfType<SpawnManager>();
-        _uiManager = FindObjectOfType<UIManager>();
         _gameManager = FindObjectOfType<GameManager>();
+        _uiManager = FindObjectOfType<UIManager>();
+        _animator = GetComponent<Animator>();
         _audioSource = GetComponent<AudioSource>();
     }
     void Update()
     {
-        Move();
+        if (!_gameManager.IsGamePaused)
+        {
+            Move();
 
-        TryToFire();
+            TryToFire();
+        }
     }
 
     private void Move()
@@ -74,6 +79,8 @@ public class Player : MonoBehaviour
         // Moving player
         Vector3 direction = playerMovement.ReadValue<Vector2>();
         transform.Translate(direction * (movementSpeed * Time.deltaTime));
+        // Animation
+        _animator.SetFloat("Tilt", direction.normalized.x);
 
         // Clamping position
         float clampedX = Mathf.Clamp(transform.position.x, -9.15f, 9.15f);
@@ -105,10 +112,11 @@ public class Player : MonoBehaviour
                 _audioSource.pitch = 0.66f;
                 break;
         }
+
         _audioSource.clip = laserAudioClip;
         _audioSource.Play();
     }
-    
+
     public void EnableTripleShotPowerUp()
     {
         currentAttack = AttackTypes.TripleAttack;
@@ -141,14 +149,14 @@ public class Player : MonoBehaviour
         if (!_hasShield)
         {
             hitPoints -= damage;
-            _uiManager.UpdateLivesImage(hitPoints);
+            _uiManager.UpdateLivesImage(hitPoints, transform.tag);
         }
         else
         {
             shieldPowerUpReference.SetActive(false);
             _hasShield = false;
         }
-        
+
         switch (hitPoints)
         {
             case 2:
@@ -159,8 +167,7 @@ public class Player : MonoBehaviour
                 playerEngineReferences[1].SetActive(true);
                 break;
             case 0:
-                _gameManager.OnGameOver();
-
+                _gameManager.OnPlayerDeath(transform.tag);
                 DestroyPlayer();
                 break;
         }

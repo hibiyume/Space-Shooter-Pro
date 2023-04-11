@@ -7,14 +7,7 @@ public class EnemyLaser : MonoBehaviour
     [SerializeField] private float speed = 8f;
     private const int Damage = 1;
 
-    [Header("Other")]
-    private Player _player;
-
-    private void Awake()
-    {
-        _player = FindObjectOfType<Player>();
-    }
-    private void Update()
+    private void FixedUpdate()
     {
         Move();
 
@@ -33,9 +26,9 @@ public class EnemyLaser : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag.Equals("Player"))
+        if (other.tag.Equals("Player1") || other.tag.Equals("Player2"))
         {
-            _player.GetDamage(Damage);
+            other.GetComponent<Player>().GetDamage(Damage);
             Destroy(gameObject);
         }
     }
