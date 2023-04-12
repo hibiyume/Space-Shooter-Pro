@@ -15,5 +15,10 @@ public class MainMenuManager : MonoBehaviour
     public void LoadCoopGameScene()
     {
         SceneManager.LoadScene(coopGameSceneId);
-    } 
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 }

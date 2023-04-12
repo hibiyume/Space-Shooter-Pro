@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         _uiManager = FindObjectOfType<UIManager>();
+        Cursor.visible = false;
     }
     private void Update()
     {
@@ -77,12 +78,14 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 0f;
             IsGamePaused = true;
             pauseGameFolder.SetActive(true);
+            Cursor.visible = true;
         }
         else
         {
             Time.timeScale = 1f;
             IsGamePaused = false;
             pauseGameFolder.SetActive(false);
+            Cursor.visible = false;
         }
     }
     public void ReturnToMainMenu()
